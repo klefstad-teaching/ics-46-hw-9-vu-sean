@@ -25,7 +25,7 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
                     return false;
             }
         }
-        return diff_count == 1;
+        return diff_count <= 1;
     }
     
     const string& shorter = (len1 < len2) ? str1 : str2;
@@ -190,7 +190,7 @@ void load_words(set<string>& word_list, const string& file_name) {
 
 void print_word_ladder(const vector<string>& ladder) {
     if (ladder.empty()) {
-        cout << "No Word ladder found." << endl;
+        cout << "No word ladder found." << endl;
         return;
     }
     
