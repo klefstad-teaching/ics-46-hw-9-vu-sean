@@ -95,7 +95,7 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     if (begin_word == end_word) {
         return {};
     }
-    
+
     queue<vector<string>> ladder_queue;
 
     vector<string> initial_ladder = {begin_word};
@@ -190,18 +190,18 @@ void load_words(set<string>& word_list, const string& file_name) {
 
 void print_word_ladder(const vector<string>& ladder) {
     if (ladder.empty()) {
-        cout << "Empty ladder" << endl;
+        cout << "No Word ladder found." << endl;
         return;
     }
     
+    cout<< "Word ladder found: ";
     for (size_t i = 0; i < ladder.size(); ++i) {
         cout << ladder[i];
         if (i < ladder.size() - 1) {
-            cout << " → ";
+            cout << " ";
         }
     }
     cout << endl;
-    cout << "Ladder length: " << ladder.size() << endl;
 }
 
 void verify_word_ladder() { //given
