@@ -8,17 +8,18 @@ void error(string word1, string word2, string msg) {
 bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
     if (str1 == str2) 
         return true;
-    if (d != 1) return false;
-    
-    int len1 = str1.length();
-    int len2 = str2.length();
-    
-    if (abs(len1 - len2) > 1) 
+    if (d != 1) 
         return false;
     
-    if (len1 == len2) {
+    int length1 = str1.length(); //of words
+    int length2 = str2.length();
+    
+    if (abs(length1 - length2) > 1) 
+        return false;
+    
+    if (length1 == length2) {
         int diff_count = 0;
-        for (int i = 0; i < len1; i++) {
+        for (int i = 0; i < length1; i++) {
             if (str1[i] != str2[i]) {
                 diff_count++;
                 if (diff_count > 1) 
@@ -28,17 +29,17 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
         return diff_count <= 1;
     }
     
-    const string& shorter = (len1 < len2) ? str1 : str2;
-    const string& longer = (len1 < len2) ? str2 : str1;
+    const string& shorter = (length1 < length2) ? str1 : str2;
+    const string& longer = (length1 < length2) ? str2 : str1;
     
     int i = 0, j = 0;
-    bool found_diff = false;
+    bool flag = false;
     
-    while (i < shorter.length() && j < longer.length()) {
+    while (i < shorter.length() && j < longer.length()) { //based on pseudo
         if (shorter[i] != longer[j]) {
-            if (found_diff) 
+            if (flag) 
                 return false;  
-            found_diff = true;
+            flag = true;
             j++; 
         } else {
             i++;
@@ -53,15 +54,15 @@ bool is_adjacent(const string& word1, const string& word2) {
     if (word1 == word2) 
         return true;
 
-    int len1 = word1.length();
-    int len2 = word2.length();
+    int length1 = word1.length();
+    int length2 = word2.length();
     
-    if (abs(len1 - len2) > 1) 
+    if (abs(length1 - length2) > 1) 
         return false;
     
-    if (len1 == len2) {
+    if (length1 == length2) {
         int diff_count = 0;
-        for (int i = 0; i < len1; i++) {
+        for (int i = 0; i < length1; i++) {
             if (word1[i] != word2[i]) {
                 diff_count++;
                 if (diff_count > 1) return false;
@@ -70,8 +71,8 @@ bool is_adjacent(const string& word1, const string& word2) {
         return diff_count <= 1;
     }
     
-    const string& shorter = (len1 < len2) ? word1 : word2;
-    const string& longer = (len1 < len2) ? word2 : word1;
+    const string& shorter = (length1 < length2) ? word1 : word2;
+    const string& longer = (length1 < length2) ? word2 : word1;
     
     int i = 0, j = 0;
     bool found_diff = false;
@@ -105,7 +106,7 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     visited.insert(begin_word);
     
     while (!ladder_queue.empty()) { //bfs
-        vector<string> current_ladder = ladder_queue.front();
+        vector<string> current_ladder = ladder_queue.front(); //ladder
         ladder_queue.pop();
         
         string last_word = current_ladder.back();
@@ -115,32 +116,31 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
         }
         
         for (const string& word : word_list) {
-            int len1 = last_word.length();
-            int len2 = word.length();
+            int length1 = last_word.length();
+            int length2 = word.length();
             
-            bool is_adj = false;
+            bool adjFlag = false;
             
-            if (abs(len1 - len2) <= 1) {
-                if (len1 == len2) {
+            if (abs(length1 - length2) <= 1) {
+                if (length1 == length2) {
                     int diff_count = 0;
-                    for (int i = 0; i < len1; i++) {
+                    for (int i = 0; i < length1; i++) {
                         if (last_word[i] != word[i]) {
                             diff_count++;
                             if (diff_count > 1) break;
                         }
                     }
-                    is_adj = (diff_count == 1);
+                    adjFlag = (diff_count == 1);
                 } else {
-                    const string& shorter = (len1 < len2) ? last_word : word;
-                    const string& longer = (len1 < len2) ? word : last_word;
+             const string& s1 = (length1 < length2) ? last_word : word;
+            const string& l1 = (length1 < length2) ? word : last_word;
+                        int i = 0, j = 0;
+                bool found_diff = false;
                     
-                    int i = 0, j = 0;
-                    bool found_diff = false;
-                    
-                    while (i < shorter.length() && j < longer.length()) {
-                        if (shorter[i] != longer[j]) {
+                    while (i < s1.length() && j < l1.length()) {
+                        if (s1[i] != l1[j]) {
                             if (found_diff) {
-                                is_adj = false;
+                                adjFlag = false;
                                 break;
                             }
                             found_diff = true;
@@ -151,11 +151,11 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
                         }
                     }
 
-                    is_adj = (i == shorter.length() && (j == longer.length() || j == longer.length() - 1));
+                    adjFlag = (i == s1.length() && (j == l1.length() || j == l1.length() - 1));
                 }
             }
             
-            if (is_adj && visited.find(word) == visited.end()) {
+            if (adjFlag && visited.find(word) == visited.end()) {
                 visited.insert(word);
 
                 vector<string> new_ladder = current_ladder;
